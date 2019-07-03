@@ -1,0 +1,32 @@
+{
+  "ver": "2.3.0",
+  "uuid": "315ae9a4-029e-4bde-99e2-f03fb4f841b3",
+  "type": "sprite",
+  "wrapMode": "clamp",
+  "filterMode": "bilinear",
+  "premultiplyAlpha": false,
+  "platformSettings": {},
+  "subMetas": {
+    "ontologyer": {
+      "ver": "1.0.4",
+      "uuid": "2127298a-15a8-4344-a9aa-023e562a4088",
+      "rawTextureUuid": "315ae9a4-029e-4bde-99e2-f03fb4f841b3",
+      "trimType": "auto",
+      "trimThreshold": 1,
+      "rotated": false,
+      "offsetX": 0,
+      "offsetY": 0,
+      "trimX": 101,
+      "trimY": 112,
+      "width": 478,
+      "height": 456,
+      "rawWidth": 680,
+      "rawHeight": 680,
+      "borderTop": 0,
+      "borderBottom": 0,
+      "borderLeft": 0,
+      "borderRight": 0,
+      "subMetas": {}
+    }
+  }
+}
