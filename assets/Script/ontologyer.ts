@@ -36,11 +36,35 @@ export default class Ontologyer extends cc.Component {
         this.xSpeed = 0;
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.on(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+
+        var touchReceiver = cc.Canvas.instance.node;
+        touchReceiver.on('touchstart', this.onTouchStart, this);
+        touchReceiver.on('touchend', this.onTouchEnd, this);
     }
 
     onDestroy() {
         cc.systemEvent.off(cc.SystemEvent.EventType.KEY_DOWN, this.onKeyDown, this);
         cc.systemEvent.off(cc.SystemEvent.EventType.KEY_UP, this.onKeyUp, this);
+
+        var touchReceiver = cc.Canvas.instance.node;
+        touchReceiver.off('touchstart', this.onTouchStart, this);
+        touchReceiver.off('touchend', this.onTouchEnd, this);
+    }
+
+    onTouchStart (event) {
+        var touchLoc = event.getLocation();
+        if (touchLoc.x >= cc.winSize.width/2) {
+            this.accLeft = false;
+            this.accRight = true;
+        } else {
+            this.accLeft = true;
+            this.accRight = false;
+        }
+    }
+
+    onTouchEnd (event) {
+        this.accLeft = false;
+        this.accRight = false;
     }
 
     setJumpAction() {
