@@ -1,1 +1,0 @@
-# bitcoin-catcher-box
