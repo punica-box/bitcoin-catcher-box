@@ -1,3 +1,4 @@
+import { Float } from './../../creator.d';
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
@@ -22,25 +23,25 @@ export default class Game extends cc.Component {
     @property(cc.Prefab)
     bitCoinPreFab: cc.Prefab = null;
 
-    @property
+    @property(cc.Float)
     maxCoinShowTime: number = 0;
 
-    @property
+    @property(cc.Float)
     minCoinShowTime: number = 0;
 
-    @property
+    @property(cc.Float)
     groundY: number = 0;
 
-    @property
+    @property(cc.Float)
     private score: number = 0;
 
     @property(cc.Label)
     scoreLabel: cc.Label = null;
 
-    @property
+    @property(cc.Float)
     timer: number = 0;
 
-    @property
+    @property(cc.Float)
     showDuration: number = 0;
 
     @property(cc.AudioClip)

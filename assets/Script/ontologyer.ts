@@ -3,29 +3,29 @@ const { ccclass, property } = cc._decorator;
 @ccclass
 export default class Ontologyer extends cc.Component {
 
-    @property
+    @property(cc.Float)
     jumpHeight: number = 0;
 
-    @property
+    @property(cc.Float)
     jumpDuration: number = 0;
 
-    @property
+    @property(cc.Float)
     squashDuration: number = 0;
 
-    @property
-    maxSpeed: number = 0;
+    @property(cc.Float)
+    public maxSpeed: number = 0;
 
-    @property
-    xSpeed: number = 0;
+    @property(cc.Float)
+    private xSpeed: number = 0;
 
-    @property
+    @property(cc.Float)
     acceleration: number = 0;
 
-    @property
-    accLeft: boolean = false;
+    @property(cc.Boolean)
+    private accLeft: boolean = false;
 
-    @property
-    accRight: boolean = false;
+    @property(cc.Boolean)
+    private accRight: boolean = false;
 
     @property(cc.AudioClip)
     jumpAudio: cc.AudioClip = null;
