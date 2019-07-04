@@ -10,6 +10,9 @@
 
 const { ccclass, property } = cc._decorator;
 
+import { RestClient } from "../ontology-ts-sdk/src"
+import { Address } from "../ontology-ts-sdk/src/crypto";
+
 @ccclass
 export default class Game extends cc.Component {
 
@@ -49,6 +52,12 @@ export default class Game extends cc.Component {
         this.score = 0;
         this.timer = 0;
         this.newBitCoin();
+
+        const address = new Address('AdLUBSSHUuFaak9j169hiamXUmPuCTnaRz');
+        const restClient = new RestClient();// default connects to Testnet
+        restClient.url = "http://polaris1.ont.io:20334";
+        const result = restClient.getBalance(address);
+        console.log(result);
     }
 
     start() {
