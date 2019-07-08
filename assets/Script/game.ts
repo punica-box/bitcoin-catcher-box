@@ -1,4 +1,3 @@
-import { Float } from './../../creator.d';
 // Learn TypeScript:
 //  - [Chinese] https://docs.cocos.com/creator/manual/zh/scripting/typescript.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
@@ -11,8 +10,7 @@ import { Float } from './../../creator.d';
 
 const { ccclass, property } = cc._decorator;
 
-import { RestClient } from "../ontology-ts-sdk/src"
-import { Address } from "../ontology-ts-sdk/src/crypto";
+import { client } from "ontology-dapi";
 
 @ccclass
 export default class Game extends cc.Component {
@@ -49,16 +47,12 @@ export default class Game extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad() {
+    async onLoad() {
         this.score = 0;
         this.timer = 0;
+        await client.registerClient({});
+        // await client.api.message.signMessage({message:'Hello'});
         this.newBitCoin();
-
-        const address = new Address('AdLUBSSHUuFaak9j169hiamXUmPuCTnaRz');
-        const restClient = new RestClient();// default connects to Testnet
-        restClient.url = "http://polaris1.ont.io:20334";
-        const result = restClient.getBalance(address);
-        console.log(result);
     }
 
     start() {
