@@ -27,7 +27,9 @@ export default class Ontologyer extends cc.Component {
     @property(cc.Boolean)
     private accRight: boolean = false;
 
-    @property(cc.AudioClip)
+    @property({
+        type: cc.AudioClip
+    })
     jumpAudio: cc.AudioClip = null;
 
     onLoad() {
