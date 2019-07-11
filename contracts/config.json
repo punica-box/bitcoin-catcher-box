@@ -1,0 +1,89 @@
+{
+    "defaultWallet": "wallet.json",
+    "password": {
+        "ANH5bHrrt111XwNEnuPZj6u95Dd6u7G4D6": "password",
+        "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve": "password"
+    },
+    "deploy": {
+        "name": "bitcoinCatcher",
+        "version": "v1.0.0",
+        "author": "NashMiao",
+        "email": "wdx7266@vip.qq.com",
+        "desc": "https://github.com/punica-box/bitcoin-catcher-box",
+        "needStorage": true,
+        "payer": "ANH5bHrrt111XwNEnuPZj6u95Dd6u7G4D6",
+        "gasPrice": 500,
+        "gasLimit": 21000000
+    },
+    "invoke": {
+        "address": "c389de61bd436a68945581b1e2d2eec395ce4d8e",
+        "defaultPayer": "ANH5bHrrt111XwNEnuPZj6u95Dd6u7G4D6",
+        "defaultSigner": "ANH5bHrrt111XwNEnuPZj6u95Dd6u7G4D6",
+        "sleep": 6,
+        "gasPrice": 500,
+        "gasLimit": 21000000,
+        "functions": [
+            {
+                "register": [
+                    "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+                    "NashMiao"
+                ],
+                "signers": [
+                    "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve"
+                ],
+                "payer": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+                "event": [
+                    "utf8",
+                    "address",
+                    "utf8"
+                ]
+            },
+            {
+                "get_user_name": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+                "preExec": true,
+                "return": "utf8"
+            },
+            {
+                "update_score": [
+                    "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+                    10
+                ],
+                "signers": [
+                    "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve"
+                ],
+                "event": [
+                    "utf8",
+                    "address",
+                    "utf8",
+                    "int"
+                ]
+            },
+            {
+                "get_score": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+                "preExec": true,
+                "return": "int"
+            },
+            {
+                "clean_score": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+                "signers": [
+                    "ANH5bHrrt111XwNEnuPZj6u95Dd6u7G4D6"
+                ],
+                "event": [
+                    "utf8",
+                    "address",
+                    "utf8"
+                ]
+            },
+            {
+                "clean_user_name": "AazEvfQPcQ2GEFFPLF1ZLwQ7K5jDn81hve",
+                "signers": [
+                    "ANH5bHrrt111XwNEnuPZj6u95Dd6u7G4D6"
+                ],
+                "event": [
+                    "utf8",
+                    "address"
+                ]
+            }
+        ]
+    }
+}
