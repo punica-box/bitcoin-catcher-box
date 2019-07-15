@@ -32,11 +32,11 @@ def main(operation, args):
     if operation == 'register':
         return register(args[0], args[1])
     if operation == 'get_user_name':
-        return get_user_name(args)
+        return get_user_name(args[0])
     if operation == 'update_score':
         return update_score(args[0], args[1])
     if operation == 'get_score':
-        return get_score(args)
+        return get_score(args[0])
     if operation == 'clean_score':
         return clean_score(args)
     if operation == 'clean_user_name':
@@ -45,9 +45,13 @@ def main(operation, args):
 
 
 def register(user_address, user_name):
+    if len(user_address) == 34:
+        user_address = Base58ToAddress(user_address)
+    assert (len(user_address) == 20 and user_address != ZERO_ADDRESS)
+
     if Get(ctx, concat(user_address, USER_KEY)):
         raise Exception("username exist")
-    assert(is_address(user_address))
+
     assert(CheckWitness(user_address))
     Put(ctx, concat(user_address, USER_KEY), user_name)
     registerEvent(user_address, user_name)
@@ -55,7 +59,10 @@ def register(user_address, user_name):
 
 
 def get_user_name(user_address):
-    assert(is_address(user_address))
+    if len(user_address) == 34:
+        user_address = Base58ToAddress(user_address)
+    assert (len(user_address) == 20 and user_address != ZERO_ADDRESS)
+
     user_name = Get(ctx, concat(user_address, USER_KEY))
     if not user_name:
         raise Exception('username not exist')
@@ -63,7 +70,10 @@ def get_user_name(user_address):
 
 
 def update_score(user_address, score):
-    assert(is_address(user_address))
+    if len(user_address) == 34:
+        user_address = Base58ToAddress(user_address)
+    assert (len(user_address) == 20 and user_address != ZERO_ADDRESS)
+
     user_name = Get(ctx, concat(user_address, USER_KEY))
     if not user_name:
         raise Exception("username not exist")
@@ -74,12 +84,18 @@ def update_score(user_address, score):
 
 
 def get_score(user_address):
-    assert(is_address(user_address))
+    if len(user_address) == 34:
+        user_address = Base58ToAddress(user_address)
+    assert (len(user_address) == 20 and user_address != ZERO_ADDRESS)
+
     return Get(ctx, concat(user_address, SCORE_KEY))
 
 
 def clean_score(user_address):
-    assert(is_address(user_address))
+    if len(user_address) == 34:
+        user_address = Base58ToAddress(user_address)
+    assert (len(user_address) == 20 and user_address != ZERO_ADDRESS)
+
     assert(CheckWitness(ADMIN))
     user_name = Get(ctx, concat(user_address, USER_KEY))
     if not user_name:
@@ -90,20 +106,13 @@ def clean_score(user_address):
 
 
 def clean_user_name(user_address):
-    assert(is_address(user_address))
+    if len(user_address) == 34:
+        user_address = Base58ToAddress(user_address)
+    assert (len(user_address) == 20 and user_address != ZERO_ADDRESS)
+
     assert(CheckWitness(ADMIN))
     if not Get(ctx, concat(user_address, USER_KEY)):
         raise Exception("username not exist")
     Delete(ctx, concat(user_address, USER_KEY))
     cleanUserNameEvent(user_address)
-    return True
-
-
-def is_address(address):
-    """
-    check the address is legal address.
-    :param address:
-    :return:True or raise exception.
-    """
-    assert (len(address) == 20 and address != ZERO_ADDRESS)
     return True
