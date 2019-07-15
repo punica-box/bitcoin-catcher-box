@@ -1,10 +1,9 @@
-import { Node } from './../../creator.d';
 const { ccclass, property } = cc._decorator;
 
 import { client } from "ontology-dapi";
 
 @ccclass
-export default class Game extends cc.Component {
+export default class GameOnchain extends cc.Component {
 
     @property(cc.Node)
     ontologyer: cc.Node = null;
@@ -44,6 +43,7 @@ export default class Game extends cc.Component {
         this.score = 0;
         this.timer = 0;
         await client.registerClient({});
+        // await client.api.message.signMessage({message:'Hello'});
         this.newBitCoin();
     }
 
@@ -54,7 +54,6 @@ export default class Game extends cc.Component {
     newBitCoin() {
         let newCoin = cc.instantiate(this.bitCoinPreFab);
         this.node.addChild(newCoin);
-        console.log(this.node);
         newCoin.setPosition(this.getNewCoinPostion());
         newCoin.getComponent('bitcoin').game = this;
         this.showDuration = this.minCoinShowTime + Math.random() * (this.maxCoinShowTime - this.minCoinShowTime);
@@ -71,27 +70,21 @@ export default class Game extends cc.Component {
 
     update(dt) {
         if (this.timer > this.showDuration) {
-            Alert.show("Score: " + this.score, this.loadGame, this.loadIndex);
-            this.ontologyer.stopAllActions();
-            this.ontologyer.active = false;
-            this.node.getChildByName("bitcoin").active = false;
+            this.gameOver();
             this.enabled = false;
             return;
         }
         this.timer += dt;
     }
 
-    loadIndex() {
-        cc.director.loadScene("Index");
-    }
-
-    loadGame() {
-        cc.director.loadScene("BitcoinCatcher");
-    }
-
     gainScore() {
         this.score += 1;
         this.scoreLabel.string = 'Score: ' + this.score;
         cc.audioEngine.playEffect(this.scoreAudio, false);
+    }
+
+    gameOver() {
+        this.ontologyer.stopAllActions();
+        cc.director.loadScene('BitcoinCatcher');
     }
 }

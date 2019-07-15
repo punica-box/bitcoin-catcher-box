@@ -1,0 +1,23 @@
+{
+  "name": "bitcoin-catcher-box",
+  "version": "1.0.0",
+  "description": "A box has all you need to get started with our Cocos Creator (BitcoinCatcher) tutorial.",
+  "main": "index.js",
+  "dependencies": {
+    "ontology-dapi": "^0.4.9"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NashMiao/bitcoin-catcher-box.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NashMiao/bitcoin-catcher-box/issues"
+  },
+  "homepage": "https://github.com/NashMiao/bitcoin-catcher-box#readme"
+}
