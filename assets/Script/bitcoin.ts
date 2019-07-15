@@ -12,6 +12,7 @@ export default class BitCoin extends cc.Component {
     public game: Game = null;
 
     update(dt) {
+        
         if (this.getOntDistance() < this.eatRadius) {
             this.onPicked();
             return;
