@@ -19,6 +19,7 @@
   <link rel="stylesheet" type="text/css" href="style-desktop.css"/>
 </head>
 <body>
+
 <h2 class="header">Collect all the Bitcoins!</h1>
 
 <div id="GameDiv" style="width:960px; height: 640px;">
@@ -39,14 +40,11 @@
     if (typeof VConsole !== 'undefined') {
         window.vConsole = new VConsole();
     }
-
     var splash = document.getElementById('splash');
     splash.style.display = 'block';
-
     var cocos2d = document.createElement('script');
     cocos2d.async = true;
     cocos2d.src = window._CCSettings.debug ? 'cocos2d-js.js' : 'cocos2d-js-min.js';
-
     var engineLoaded = function () {
         document.body.removeChild(cocos2d);
         cocos2d.removeEventListener('load', engineLoaded, false);
