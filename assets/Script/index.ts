@@ -1,6 +1,8 @@
 const { ccclass, property } = cc._decorator;
 
 import { client } from "ontology-dapi";
+import { client as mobileClient } from 'cyanobridge'
+
 
 @ccclass
 export default class NewClass extends cc.Component {
@@ -17,13 +19,21 @@ export default class NewClass extends cc.Component {
 
     private provider = null;
 
+    private currentClient = null;
+
     private contractAddress: string = "6fa5b9c9bd8ae8e74773d910619622625e36d4d8";
 
     // LIFE-CYCLE CALLBACKS:
 
     async onLoad() {
+        if (screen.width <= 699) {
+            this.currentClient = mobileClient;
+          }
+          else{
+            this.currentClient = client;
+          }
         try {
-            await client.registerClient({});
+            await this.currentClient.registerClient({});
             this.provider = await client.api.provider.getProvider();
             console.log("Get provider: " + JSON.stringify(this.provider));
         }
@@ -91,9 +101,9 @@ export default class NewClass extends cc.Component {
     }
 
     async getUserName() {
-        let accountAddress: String = await client.api.asset.getAccount();
+        let accountAddress: String = await this.currentClient.api.asset.getAccount();
         try {
-            let result = await client.api.smartContract.invokeRead({
+            let result = await this.currentClient.api.smartContract.invokeRead({
                 scriptHash: this.contractAddress,
                 operation: 'get_user_name',
                 args: [{ type: 'String', value: accountAddress }]
@@ -106,8 +116,8 @@ export default class NewClass extends cc.Component {
     }
 
     async register() {
-        let accountAddress: String = await client.api.asset.getAccount();
-        let result = await client.api.smartContract.invoke({
+        let accountAddress: String = await this.currentClient.api.asset.getAccount();
+        let result = await this.currentClient.api.smartContract.invoke({
             scriptHash: this.contractAddress,
             operation: "register",
             args: [{ type: "String", value: accountAddress }, { type: 'String', value: "NashMiao" }],
