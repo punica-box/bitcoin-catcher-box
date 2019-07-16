@@ -48,8 +48,6 @@ export default class GameOnchain extends cc.Component {
     async onLoad() {
         this.score = 0;
         this.timer = 0;
-        this.gasPrice = this.gasPrice === 0 ? 500 : this.gasPrice;
-        this.gasLimit = this.gasPrice === 0 ? 20000 : this.gasLimit;
         try {
             await client.registerClient({});
         }
