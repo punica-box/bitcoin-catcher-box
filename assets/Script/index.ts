@@ -52,8 +52,9 @@ export default class NewClass extends cc.Component {
                     await this.register();
                     break;
                 }
-                await Alert.show("Welcome " + userName);
-                cc.director.loadScene('BitcoinCatcher');
+                await Alert.show("Welcome " + userName, function () {
+                    cc.director.loadScene('BitcoinCatcher');
+                });
                 break;
             case 'scoreButton':
                 if (this.provider === null) {
