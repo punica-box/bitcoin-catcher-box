@@ -47,13 +47,13 @@ export default class NewClass extends cc.Component {
                     break;
                 }
                 let userName = await this.getUserName();
-                console.log("userName: " + userName);
+                console.log("userName: " +  userName);
                 if (userName.length === 0) {
                     await this.register();
                     break;
                 }
                 await Alert.show("Welcome " + userName, function () {
-                    cc.director.loadScene('BitcoinCatcher');
+                    cc.director.loadScene('BitcoinCatcherOnchain');
                 });
                 break;
             case 'scoreButton':
