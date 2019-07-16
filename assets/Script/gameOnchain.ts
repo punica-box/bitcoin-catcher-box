@@ -1,6 +1,6 @@
 const { ccclass, property } = cc._decorator;
 
-import { client } from "ontology-dapi";
+import { client } from 'ontology-dapi';
 
 @ccclass
 export default class GameOnchain extends cc.Component {
@@ -37,13 +37,25 @@ export default class GameOnchain extends cc.Component {
     })
     scoreAudio: cc.AudioClip = null;
 
+    private gasPrice = 500;
+
+    private gasLimit = 20000;
+
+    private contractAddress: string = "6fa5b9c9bd8ae8e74773d910619622625e36d4d8";
+
     // LIFE-CYCLE CALLBACKS:
 
     async onLoad() {
         this.score = 0;
         this.timer = 0;
-        await client.registerClient({});
-        // await client.api.message.signMessage({message:'Hello'});
+        this.gasPrice = this.gasPrice === 0 ? 500 : this.gasPrice;
+        this.gasLimit = this.gasPrice === 0 ? 20000 : this.gasLimit;
+        try {
+            await client.registerClient({});
+        }
+        catch (e) {
+            console.log(e);
+        }
         this.newBitCoin();
     }
 
@@ -68,23 +80,50 @@ export default class GameOnchain extends cc.Component {
         return cc.v2(randX, randY);
     }
 
-    update(dt) {
+    async update(dt) {
         if (this.timer > this.showDuration) {
-            this.gameOver();
+            await Alert.show("Score: " + this.score, async f => {
+                let accountAddress: String = await client.api.asset.getAccount();
+                let txHash = "";
+                try {
+                    let result = await client.api.smartContract.invoke({
+                        scriptHash: this.contractAddress,
+                        operation: "update_score",
+                        args: [{ type: "String", value: accountAddress }, { type: 'Integer', value: this.score }],
+                        gasPrice: this.gasPrice,
+                        gasLimit: this.gasLimit
+                    });
+                    txHash = result['transaction'];
+                    Alert.show("TxHash:" + txHash, function () {
+                        cc.sys.openURL("https://explorer.ont.io/transaction/" + result['transaction'] + "/testnet");
+                        cc.director.loadScene("BitcoinCatcherOnchain");
+                    }, function () {
+                        cc.director.loadScene("BitcoinCatcherOnchain");
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+            }, this.loadIndex);
+            this.ontologyer.stopAllActions();
+            this.ontologyer.active = false;
+            try {
+                this.node.getChildByName("bitcoin").active = false;
+            } catch (e) {
+                console.log(e);
+            }
             this.enabled = false;
             return;
         }
         this.timer += dt;
     }
 
+    async loadIndex() {
+        cc.director.loadScene("Index");
+    }
+
     gainScore() {
         this.score += 1;
         this.scoreLabel.string = 'Score: ' + this.score;
         cc.audioEngine.playEffect(this.scoreAudio, false);
-    }
-
-    gameOver() {
-        this.ontologyer.stopAllActions();
-        cc.director.loadScene('BitcoinCatcher');
     }
 }

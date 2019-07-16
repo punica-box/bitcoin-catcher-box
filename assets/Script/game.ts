@@ -1,7 +1,4 @@
-import { Node } from './../../creator.d';
 const { ccclass, property } = cc._decorator;
-
-import { client } from "ontology-dapi";
 
 @ccclass
 export default class Game extends cc.Component {
@@ -43,7 +40,6 @@ export default class Game extends cc.Component {
     async onLoad() {
         this.score = 0;
         this.timer = 0;
-        await client.registerClient({});
         this.newBitCoin();
     }
 
@@ -74,9 +70,9 @@ export default class Game extends cc.Component {
             Alert.show("Score: " + this.score, this.loadGame, this.loadIndex);
             this.ontologyer.stopAllActions();
             this.ontologyer.active = false;
-            try{
+            try {
                 this.node.getChildByName("bitcoin").active = false;
-            }catch(e){
+            } catch (e) {
                 console.log(e);
             }
             this.enabled = false;

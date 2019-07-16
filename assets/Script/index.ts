@@ -47,7 +47,7 @@ export default class NewClass extends cc.Component {
                     break;
                 }
                 let userName = await this.getUserName();
-                console.log("userName: " +  userName);
+                console.log("userName: " + userName);
                 if (userName.length === 0) {
                     await this.register();
                     break;
@@ -79,7 +79,6 @@ export default class NewClass extends cc.Component {
                 operation: 'get_score',
                 args: [{ type: 'String', value: accountAddress }]
             });
-            console.log(result);
             if (result === "") {
                 result = 0;
             }
@@ -115,7 +114,6 @@ export default class NewClass extends cc.Component {
             gasLimit: this.gasLimit
         });
         try {
-            console.log(result);
             let txHash = result['transaction'];
             if (txHash !== "") {
                 await Alert.show("TxHash: " + result['transaction'], function () {
@@ -123,6 +121,7 @@ export default class NewClass extends cc.Component {
                 });
             }
         } catch (e) {
+            console.log(result);
             console.log(e);
         }
     }
