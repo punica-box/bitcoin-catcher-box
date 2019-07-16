@@ -339,7 +339,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 148.96,
+      "width": 93.1,
       "height": 50.4
     },
     "_anchorPoint": {
@@ -386,7 +386,7 @@
     "_useOriginalSize": false,
     "_string": "Score: 0",
     "_N$string": "Score: 0",
-    "_fontSize": 40,
+    "_fontSize": 25,
     "_lineHeight": 40,
     "_enableWrapText": true,
     "_N$file": null,
