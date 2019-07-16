@@ -74,7 +74,11 @@ export default class Game extends cc.Component {
             Alert.show("Score: " + this.score, this.loadGame, this.loadIndex);
             this.ontologyer.stopAllActions();
             this.ontologyer.active = false;
-            this.node.getChildByName("bitcoin").active = false;
+            try{
+                this.node.getChildByName("bitcoin").active = false;
+            }catch(e){
+                console.log(e);
+            }
             this.enabled = false;
             return;
         }
