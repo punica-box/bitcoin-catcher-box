@@ -143,7 +143,7 @@ export default class NewClass extends cc.Component {
                 payer: accountAddress
             });
             if (response["error"] === 0) {
-                let txHash = response['transaction'];
+                let txHash = response['result'];
                 Alert.show("TxHash:" + txHash, function () {
                     cc.director.loadScene("BitcoinCatcherOnchainMobile");
                 });

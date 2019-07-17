@@ -108,8 +108,9 @@ export default class GameOnchain extends cc.Component {
                             url: ""
                         }
                     });
+                    console.log(response);
                     if (response["error"] === 0) {
-                        let txHash = response['transaction'];
+                        let txHash = response['result'];
                         Alert.show("TxHash:" + txHash, function () {
                             cc.director.loadScene("BitcoinCatcherOnchainMobile");
                         }, function () {
