@@ -64,7 +64,7 @@ export default class NewClass extends cc.Component {
                     break;
                 }
                 let score = await this.getScore();
-                await Alert.show("score: " + score);
+                await Alert.show("score: " + score, null, null, false);
                 break;
             default:
                 break
