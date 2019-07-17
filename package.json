@@ -4,8 +4,7 @@
   "description": "A box has all you need to get started with our Cocos Creator (BitcoinCatcher) tutorial.",
   "main": "index.js",
   "dependencies": {
-    "cyanobridge": "^0.1.0",
-    "ontology-dapi": "^0.4.9"
+    "cyanobridge": "^0.1.0"
   },
   "devDependencies": {},
   "scripts": {
