@@ -137,7 +137,7 @@ export default class GameOnchain extends cc.Component {
     }
 
     async loadIndex() {
-        cc.director.loadScene("Index");
+        cc.director.loadScene("IndexMobile");
     }
 
     gainScore() {

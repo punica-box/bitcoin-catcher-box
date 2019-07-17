@@ -96,7 +96,7 @@ export default class GameOnchain extends cc.Component {
                         cc.sys.openURL("https://explorer.ont.io/transaction/" + result['transaction'] + "/testnet");
                         cc.director.loadScene("BitcoinCatcherOnchain");
                     }, function () {
-                        cc.director.loadScene("BitcoinCatcherOnchain");
+                        cc.director.loadScene("Index");
                     });
                 } catch (e) {
                     console.log(e);
