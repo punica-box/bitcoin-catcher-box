@@ -16,8 +16,8 @@
   },
   "encryptJs": true,
   "excludeScenes": [
-    "d18a9499-2510-4517-9054-f6cce25e3f5a",
-    "39540bb0-6969-4c54-bfaa-22953bcb0f10"
+    "a7724f80-d311-41b9-95c5-4d2167402573",
+    "a79de428-89df-4cb7-885e-743c2399ed33"
   ],
   "fb-instant-games": {},
   "includeSDKBox": false,
@@ -38,7 +38,7 @@
     "orientation": "portrait",
     "zip": false
   },
-  "startScene": "a79de428-89df-4cb7-885e-743c2399ed33",
+  "startScene": "39540bb0-6969-4c54-bfaa-22953bcb0f10",
   "title": "bitcoin-catcher",
   "webOrientation": "auto",
   "wechatgame": {
