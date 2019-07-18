@@ -49,6 +49,9 @@ def register(user_address, user_name):
         user_address = Base58ToAddress(user_address)
     assert (len(user_address) == 20 and user_address != ZERO_ADDRESS)
 
+    if len(user_name) == 0:
+        raise Exception("empty username")
+
     if Get(ctx, concat(user_address, USER_KEY)):
         raise Exception("username exist")
 
@@ -65,7 +68,7 @@ def get_user_name(user_address):
 
     user_name = Get(ctx, concat(user_address, USER_KEY))
     if not user_name:
-        raise Exception('username not exist')
+        user_name = ""
     return user_name
 
 
