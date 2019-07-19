@@ -23,9 +23,11 @@ export default class index extends cc.Component {
             this.withBlockchain = true;
             try {
                 await client.registerClient({});
+                await client.api.provider.getProvider();
                 this.walletExist = true;
             }
-            catch (e) {
+            catch (e) {        
+                this.walletExist = false;
                 Alert.show("Please install cyano wallet first if you want to play it with blockchain.", function () {
                     cc.sys.openURL("https://chrome.google.com/webstore/detail/cyano-wallet/dkdedlpgdmmkkfjabffeganieamfklkm?hl=en");
                 }, f => {
@@ -40,9 +42,9 @@ export default class index extends cc.Component {
     }
 
     async startScene(event) {
-        console.log(event);
         switch (event.node.name) {
             case 'playButton':
+
                 if (this.withBlockchain === false) {
                     cc.director.loadScene('BitcoinCatcher');
                     break;
