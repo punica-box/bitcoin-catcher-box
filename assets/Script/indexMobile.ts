@@ -62,8 +62,8 @@ export default class IndexMobile extends cc.Component {
                 } catch (e) {
                     console.log(e);
                 }
-                console.log("userName:" + userName.length);
-                if (userName.length == 1) {
+
+                if (userName.length === 1) {
                     Alert.show("Let's register first.", async f => {
                         await this.register();
                     })
@@ -81,11 +81,10 @@ export default class IndexMobile extends cc.Component {
                     });
                     break;
                 }
+
                 let score = await this.getScore();
                 let address = await this.getAcountAddress();
-                if (score !== "") {
-                    await Alert.show("Address:\n" + address + "\n\nScore: " + score, null, null, false);
-                }
+                Alert.show("Address:\n" + address + "\n\nScore: " + score, null, null, false);
                 break;
             default:
                 break
@@ -107,7 +106,6 @@ export default class IndexMobile extends cc.Component {
 
     async getUserName() {
         let accountAddress = await this.getAcountAddress();
-        console.log(accountAddress);
         try {
             let response = await client.api.smartContract.invokeRead({
                 scriptHash: Globals.contractAddress,
@@ -116,8 +114,6 @@ export default class IndexMobile extends cc.Component {
                 gasPrice: Globals.gasPrice,
                 gasLimit: Globals.gasLimit
             });
-            console.log(response);
-
             if (response["error"] !== 0) {
                 return "";
             }
@@ -140,13 +136,13 @@ export default class IndexMobile extends cc.Component {
             });
             if (response["error"] !== 0) {
                 await Alert.show(response["result"], null, null, false);
-                return "";
+                return 0;
             }
             let score = response["result"]["Result"];
             if (score === "") {
                 score = 0;
             }
-            return score;
+            return parseInt(score, 16);
         } catch (e) {
             console.log(e);
             return 0;

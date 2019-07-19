@@ -1,128 +1,155 @@
-// const { ccclass, property } = cc._decorator;
+const { ccclass, property } = cc._decorator;
 
-// import { client } from "ontology-dapi";
+import { client } from "ontology-dapi";
+import { utils } from "./utils";
 
-// @ccclass
-// export default class NewClass extends cc.Component {
+@ccclass
+export default class NewClass extends cc.Component {
 
-//     @property(cc.Button)
-//     playButton: cc.Button = null;
+    @property(cc.Button)
+    playButton: cc.Button = null;
 
-//     @property(cc.Button)
-//     scoreButton: cc.Button = null;
+    @property(cc.Button)
+    scoreButton: cc.Button = null;
 
-//     private gasPrice = 500;
+    private walletExist = false;
 
-//     private gasLimit = 20000;
+    private withBlockchain = true;
 
-//     private provider = null;
+    // LIFE-CYCLE CALLBACKS:
 
-//     private contractAddress: string = "6fa5b9c9bd8ae8e74773d910619622625e36d4d8";
+    async onLoad() {
+        Alert.show("Do you want to paly this game in blockchain?", async f => {
+            this.withBlockchain = true;
+            try {
+                await client.registerClient({});
+                this.walletExist = true;
+            }
+            catch (e) {
+                Alert.show("Please install cyano wallet first if you want to play it with blockchain.", function () {
+                    cc.sys.openURL("https://chrome.google.com/webstore/detail/cyano-wallet/dkdedlpgdmmkkfjabffeganieamfklkm?hl=en");
+                }, f => {
+                    this.withBlockchain = false;
+                });
+            }
+        }, f => {
+            this.withBlockchain = false;
+        })
+        this.playButton.node.on('click', this.startScene, this);
+        this.scoreButton.node.on('click', this.startScene, this);
+    }
 
-//     // LIFE-CYCLE CALLBACKS:
+    async startScene(event) {
+        console.log(event);
+        switch (event.node.name) {
+            case 'playButton':
+                if (this.withBlockchain === false) {
+                    cc.director.loadScene('BitcoinCatcher');
+                    break;
+                }
 
-//     async onLoad() {
-//         try {
-//             await client.registerClient({});
-//             this.provider = await client.api.provider.getProvider();
-//             console.log("Get provider: " + JSON.stringify(this.provider));
-//         }
-//         catch (e) {
-//             await Alert.show("Please install cyano wallet first if you want to play it with blockchain.", function () {
-//                 cc.sys.openURL("https://chrome.google.com/webstore/detail/cyano-wallet/dkdedlpgdmmkkfjabffeganieamfklkm?hl=en");
-//             });
-//         }
-//         this.playButton.node.on('click', this.startScene, this);
-//         this.scoreButton.node.on('click', this.startScene, this);
-//     }
+                if (this.walletExist === false) {
+                    await Alert.show("Do you want to play it without blockchain?", f => {
+                        this.withBlockchain = false;
+                        cc.director.loadScene('BitcoinCatcher');
+                    }, f => {
+                        this.withBlockchain = true;
+                    });
+                    break;
+                }
 
-//     async startScene(event) {
-//         console.log(event);
-//         switch (event.node.name) {
-//             case 'playButton':
-//                 if (this.provider === null) {
-//                     await Alert.show("Do you want to play it without blockchain?", function () {
-//                         cc.director.loadScene('BitcoinCatcher');
-//                     });
-//                     break;
-//                 }
-//                 let userName = await this.getUserName();
-//                 console.log("userName: " + userName);
-//                 if (userName.length === 0) {
-//                     await this.register();
-//                     break;
-//                 }
-//                 await Alert.show("Welcome " + userName, function () {
-//                     cc.director.loadScene('BitcoinCatcherOnchain');
-//                 });
-//                 break;
-//             case 'scoreButton':
-//                 if (this.provider === null) {
-//                     await Alert.show("Please install cyano wallet first", function () {
-//                         cc.sys.openURL("https://chrome.google.com/webstore/detail/cyano-wallet/dkdedlpgdmmkkfjabffeganieamfklkm?hl=en");
-//                     });
-//                     break;
-//                 }
-//                 let score = await this.getScore();
-//                 await Alert.show("score: " + score, null, null, false);
-//                 break;
-//             default:
-//                 break
-//         }
-//     }
+                let userName = "";
+                try {
+                    userName = await this.getUserName();
+                } catch (e) {
+                    console.log(e);
+                }
 
-//     async getScore() {
-//         let accountAddress: String = await client.api.asset.getAccount();
-//         try {
-//             let result = await client.api.smartContract.invokeRead({
-//                 scriptHash: this.contractAddress,
-//                 operation: 'get_score',
-//                 args: [{ type: 'String', value: accountAddress }]
-//             });
-//             if (result === "") {
-//                 result = 0;
-//             }
-//             return result;
-//         } catch (e) {
-//             console.log(e);
-//             return '';
-//         }
-//     }
+                if (userName.length === 1) {
+                    Alert.show("Let's register first.", async f => {
+                        await this.register();
+                    })
+                    return;
+                }
+                else {
+                    Alert.show("Welcome " + userName, function () {
+                        cc.director.loadScene('BitcoinCatcherOnchain');
+                    });
+                }
+                break;
+            case 'scoreButton':
+                if (this.walletExist === false) {
+                    Alert.show("Please install cyano wallet first", function () {
+                        cc.sys.openURL("https://chrome.google.com/webstore/detail/cyano-wallet/dkdedlpgdmmkkfjabffeganieamfklkm?hl=en");
+                    });
+                    break;
+                }
 
-//     async getUserName() {
-//         let accountAddress: String = await client.api.asset.getAccount();
-//         try {
-//             let result = await client.api.smartContract.invokeRead({
-//                 scriptHash: this.contractAddress,
-//                 operation: 'get_user_name',
-//                 args: [{ type: 'String', value: accountAddress }]
-//             });
-//             return result;
-//         } catch (e) {
-//             console.log(e);
-//             return '';
-//         }
-//     }
+                let score = await this.getScore();
+                let address = await this.getAcountAddress();
+                Alert.show("Address:\n" + address + "\n\nScore: " + score, null, null, false);
+                break;
+            default:
+                break
+        }
+    }
 
-//     async register() {
-//         let accountAddress: String = await client.api.asset.getAccount();
-//         let result = await client.api.smartContract.invoke({
-//             scriptHash: this.contractAddress,
-//             operation: "register",
-//             args: [{ type: "String", value: accountAddress }, { type: 'String', value: "NashMiao" }],
-//             gasPrice: this.gasPrice,
-//             gasLimit: this.gasLimit
-//         });
-//         try {
-//             let txHash = result['transaction'];
-//             if (txHash !== "") {
-//                 await Alert.show("TxHash: " + result['transaction'], function () {
-//                     cc.sys.openURL("https://explorer.ont.io/transaction/" + result['transaction'] + "/testnet");
-//                 });
-//             }
-//         } catch (e) {
-//             console.log(result);
-//             console.log(e);
-//         }
-//     }
-// }
+    async getAcountAddress() {
+        return await client.api.asset.getAccount();;
+    }
+
+    async getScore() {
+        let address: String = await this.getAcountAddress();
+        try {
+            let result = await client.api.smartContract.invokeRead({
+                scriptHash: Globals.contractAddress,
+                operation: 'get_score',
+                args: [{ type: 'String', value: address }]
+            });
+            if (result === "") {
+                result = 0;
+            }
+            return result;
+        } catch (e) {
+            console.log(e);
+            return '';
+        }
+    }
+
+    async getUserName() {
+        let address: String = await this.getAcountAddress();
+        try {
+            let result = await client.api.smartContract.invokeRead({
+                scriptHash: Globals.contractAddress,
+                operation: 'get_user_name',
+                args: [{ type: 'String', value: address }]
+            });
+            return utils.toUtf8(result);
+        } catch (e) {
+            console.log(e);
+            return '';
+        }
+    }
+
+    async register() {
+        let address: String = await this.getAcountAddress();
+        let result = await client.api.smartContract.invoke({
+            scriptHash: Globals.contractAddress,
+            operation: "register",
+            args: [{ type: "String", value: address }, { type: 'String', value: "NashMiao" }],
+            gasPrice: Globals.gasPrice,
+            gasLimit: Globals.gasLimit
+        });
+        try {
+            let txHash = result['transaction'];
+            if (txHash !== "") {
+                await Alert.show("TxHash: " + result['transaction'], function () {
+                    cc.sys.openURL("https://explorer.ont.io/transaction/" + result['transaction'] + "/testnet");
+                });
+            }
+        } catch (e) {
+            console.log(result);
+            console.log(e);
+        }
+    }
+}
