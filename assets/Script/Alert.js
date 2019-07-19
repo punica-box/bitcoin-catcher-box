@@ -15,7 +15,7 @@ Alert.show = function (detailString, enterCallBack, cancelCallBack, needCancel, 
     if (Alert._alert != undefined) {
         return;
     }
- 
+
     duration = duration ? duration : Alert._duration;
 
     cc.loader.loadRes("Alert", cc.Prefab, function (error, prefab) {
@@ -68,7 +68,7 @@ Alert.show = function (detailString, enterCallBack, cancelCallBack, needCancel, 
 
     self.startFadeIn = function () {
         cc.eventManager.pauseTarget(Alert._alert, true);
-        Alert._alert.position = cc.p(0, 0);
+        Alert._alert.position = cc.v2(0, 0);
         Alert._alert.setScale(2);
         Alert._alert.opacity = 0;
         Alert._alert.runAction(self.actionFadeIn);

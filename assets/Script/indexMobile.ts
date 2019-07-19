@@ -1,9 +1,9 @@
 const { ccclass, property } = cc._decorator;
 
 import { client } from "cyanobridge";
-
+import { utils } from "./utils";
 @ccclass
-export default class NewClass extends cc.Component {
+export default class IndexMobile extends cc.Component {
 
     @property(cc.Button)
     playButton: cc.Button = null;
@@ -11,49 +11,68 @@ export default class NewClass extends cc.Component {
     @property(cc.Button)
     scoreButton: cc.Button = null;
 
-    private gasPrice = 500;
-
-    private gasLimit = 20000;
-
     private walletExist = false;
 
-    private contractAddress: string = "6fa5b9c9bd8ae8e74773d910619622625e36d4d8";
+    private withBlockchain = true;
 
     // LIFE-CYCLE CALLBACKS:
 
-    async onLoad() {
-        try {
-            await client.registerClient();
-            this.walletExist = true;
-        }
-        catch (e) {
-            await Alert.show("Please open it in ONTO.", function () {
-                cc.sys.openURL("https://onto.app/");
-            });
-        }
+    onLoad() {
+        Alert.show("Do you want to paly this game in blockchain?", async f => {
+            this.withBlockchain = true;
+            try {
+                await client.registerClient();
+                this.walletExist = true;
+            }
+            catch (e) {
+                Alert.show("If you want to play with blockchain, please open it in ONTO.", function () {
+                    cc.sys.openURL("https://onto.app/");
+                }, f => {
+                    this.withBlockchain = false;
+                });
+            }
+        }, f => {
+            this.withBlockchain = false;
+        })
         this.playButton.node.on('click', this.startScene, this);
         this.scoreButton.node.on('click', this.startScene, this);
     }
 
     async startScene(event) {
-        console.log(event);
         switch (event.node.name) {
             case 'playButton':
+                if (this.withBlockchain === false) {
+                    cc.director.loadScene('BitcoinCatcher');
+                    break;
+                }
+
                 if (this.walletExist === false) {
-                    await Alert.show("Do you want to play it without blockchain?", function () {
+                    await Alert.show("Do you want to play it without blockchain?", f => {
+                        this.withBlockchain = false;
                         cc.director.loadScene('BitcoinCatcher');
+                    }, f => {
+                        this.withBlockchain = true;
                     });
                     break;
                 }
-                let userName = await this.getUserName();
-                console.log("userName: " + userName);
-                if (userName.length === 0) {
-                    await this.register();
-                    break;
+
+                let userName = "";
+                try {
+                    userName = await this.getUserName();
+                } catch (e) {
+                    console.log(e);
                 }
-                await Alert.show("Welcome " + userName, function () {
-                    cc.director.loadScene('BitcoinCatcherOnchainMobile');
-                });
+
+                if (userName.length === 1) {
+                    Alert.show("Let's register first.", async f => {
+                        await this.register();
+                    })
+                    return;
+                } else {
+                    Alert.show("Welcome " + userName, function () {
+                        cc.director.loadScene('BitcoinCatcherOnchainMobile');
+                    });
+                }
                 break;
             case 'scoreButton':
                 if (this.walletExist === false) {
@@ -62,10 +81,10 @@ export default class NewClass extends cc.Component {
                     });
                     break;
                 }
+
                 let score = await this.getScore();
-                if (score !== "") {
-                    await Alert.show("score: " + score, null, null, false);
-                }
+                let address = await this.getAcountAddress();
+                Alert.show("Address:\n" + address + "\n\nScore: " + score, null, null, false);
                 break;
             default:
                 break
@@ -87,19 +106,18 @@ export default class NewClass extends cc.Component {
 
     async getUserName() {
         let accountAddress = await this.getAcountAddress();
-        console.log(accountAddress);
         try {
             let response = await client.api.smartContract.invokeRead({
-                scriptHash: this.contractAddress,
+                scriptHash: Globals.contractAddress,
                 operation: "get_user_name",
                 args: [{ type: 'String', value: accountAddress }],
-                gasPrice: this.gasPrice,
-                gasLimit: this.gasLimit
+                gasPrice: Globals.gasPrice,
+                gasLimit: Globals.gasLimit
             });
             if (response["error"] !== 0) {
                 return "";
             }
-            return response["result"]["Result"];
+            return utils.toUtf8(response["result"]["Result"]);
         } catch (e) {
             console.log(e);
             return '';
@@ -110,21 +128,21 @@ export default class NewClass extends cc.Component {
         try {
             let accountAddress = await this.getAcountAddress();
             let response = await client.api.smartContract.invokeRead({
-                scriptHash: this.contractAddress,
+                scriptHash: Globals.contractAddress,
                 operation: 'get_score',
                 args: [{ type: 'String', value: accountAddress }],
-                gasPrice: this.gasPrice,
-                gasLimit: this.gasLimit
+                gasPrice: Globals.gasPrice,
+                gasLimit: Globals.gasLimit
             });
             if (response["error"] !== 0) {
                 await Alert.show(response["result"], null, null, false);
-                return "";
+                return 0;
             }
             let score = response["result"]["Result"];
             if (score === "") {
                 score = 0;
             }
-            return score;
+            return parseInt(score, 16);
         } catch (e) {
             console.log(e);
             return 0;
@@ -135,11 +153,11 @@ export default class NewClass extends cc.Component {
         try {
             let accountAddress = await this.getAcountAddress();
             let response = await client.api.smartContract.invoke({
-                scriptHash: this.contractAddress,
+                scriptHash: Globals.contractAddress,
                 operation: "register",
                 args: [{ type: "String", value: accountAddress }, { type: 'String', value: "NashMiao" }],
-                gasPrice: this.gasPrice,
-                gasLimit: this.gasLimit,
+                gasPrice: Globals.gasPrice,
+                gasLimit: Globals.gasLimit,
                 payer: accountAddress
             });
             if (response["error"] === 0) {
