@@ -70,7 +70,7 @@ export default class GameOnchain extends cc.Component {
 
     async update(dt) {
         if (this.timer > this.showDuration) {
-            await Alert.show("Score: " + this.score, async f => {
+            await Alert.show("Score: " + this.score + "\n Do you want to upload score into blockchain?", async f => {
                 let accountAddress: String = await client.api.asset.getAccount();
                 let txHash = "";
                 try {

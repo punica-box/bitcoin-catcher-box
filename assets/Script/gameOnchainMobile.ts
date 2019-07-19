@@ -37,12 +37,6 @@ export default class GameOnchain extends cc.Component {
     })
     scoreAudio: cc.AudioClip = null;
 
-    private gasPrice = 500;
-
-    private gasLimit = 20000;
-
-    private contractAddress: string = "6fa5b9c9bd8ae8e74773d910619622625e36d4d8";
-
     // LIFE-CYCLE CALLBACKS:
 
     async onLoad() {
@@ -92,21 +86,16 @@ export default class GameOnchain extends cc.Component {
 
     async update(dt) {
         if (this.timer > this.showDuration) {
-            await Alert.show("Score: " + this.score, async f => {
+            await Alert.show("Score: " + this.score + "\n Do you want to upload score into blockchain?", async f => {
                 let accountAddress = await this.getAcountAddress();
                 try {
-                    let response = await client.api.smartContract.invokePasswordFree({
-                        scriptHash: this.contractAddress,
+                    let response = await client.api.smartContract.invoke({
+                        scriptHash: Globals.contractAddress,
                         operation: "update_score",
                         args: [{ type: "String", value: accountAddress }, { type: 'Integer', value: this.score }],
-                        gasPrice: this.gasPrice,
-                        gasLimit: this.gasLimit,
-                        payer: accountAddress,
-                        config: {
-                            login: false,
-                            message: "",
-                            url: ""
-                        }
+                        gasPrice: Globals.gasPrice,
+                        gasLimit: Globals.gasLimit,
+                        payer: accountAddress
                     });
                     console.log(response);
                     if (response["error"] === 0) {
