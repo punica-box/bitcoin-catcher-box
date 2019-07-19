@@ -4,7 +4,7 @@ import { client } from "ontology-dapi";
 import { utils } from "./utils";
 
 @ccclass
-export default class NewClass extends cc.Component {
+export default class index extends cc.Component {
 
     @property(cc.Button)
     playButton: cc.Button = null;
@@ -49,7 +49,7 @@ export default class NewClass extends cc.Component {
                 }
 
                 if (this.walletExist === false) {
-                    await Alert.show("Do you want to play it without blockchain?", f => {
+                    Alert.show("Do you want to play it without blockchain?", f => {
                         this.withBlockchain = false;
                         cc.director.loadScene('BitcoinCatcher');
                     }, f => {
