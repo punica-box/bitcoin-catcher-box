@@ -87,8 +87,8 @@ export default class index extends cc.Component {
                     break;
                 }
 
-                let score = await this.getScore();
-                let address = await this.getAcountAddress();
+                const score = await this.getScore();
+                const address = await this.getAcountAddress();
                 Alert.show("Address:\n" + address + "\n\nScore: " + score, null, null, false);
                 break;
             default:
@@ -101,7 +101,7 @@ export default class index extends cc.Component {
     }
 
     async getScore() {
-        let address: String = await this.getAcountAddress();
+        const address: String = await this.getAcountAddress();
         try {
             let result = await client.api.smartContract.invokeRead({
                 scriptHash: Globals.contractAddress,
@@ -119,9 +119,9 @@ export default class index extends cc.Component {
     }
 
     async getUserName() {
-        let address: String = await this.getAcountAddress();
+        const address: String = await this.getAcountAddress();
         try {
-            let result = await client.api.smartContract.invokeRead({
+            const result = await client.api.smartContract.invokeRead({
                 scriptHash: Globals.contractAddress,
                 operation: 'get_user_name',
                 args: [{ type: 'String', value: address }]
@@ -134,8 +134,8 @@ export default class index extends cc.Component {
     }
 
     async register() {
-        let address: String = await this.getAcountAddress();
-        let result = await client.api.smartContract.invoke({
+        const address: String = await this.getAcountAddress();
+        const result = await client.api.smartContract.invoke({
             scriptHash: Globals.contractAddress,
             operation: "register",
             args: [{ type: "String", value: address }, { type: 'String', value: "NashMiao" }],
@@ -143,10 +143,10 @@ export default class index extends cc.Component {
             gasLimit: Globals.gasLimit
         });
         try {
-            let txHash = result['transaction'];
+            const txHash = result['transaction'];
             if (txHash !== "") {
-                await Alert.show("TxHash: " + result['transaction'], function () {
-                    cc.sys.openURL("https://explorer.ont.io/transaction/" + result['transaction'] + "/testnet");
+                await Alert.show("TxHash: " + txHash, function () {
+                    cc.sys.openURL("https://explorer.ont.io/transaction/" + txHash + "/testnet");
                 });
             }
         } catch (e) {
