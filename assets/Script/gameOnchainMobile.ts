@@ -73,7 +73,7 @@ export default class GameOnchain extends cc.Component {
     }
 
     async getAcountAddress() {
-        let response = await client.api.asset.getAccount({
+        const response = await client.api.asset.getAccount({
             dappName: "Bitcoin Catcher",
             dappIcon: ""
         });
@@ -87,9 +87,9 @@ export default class GameOnchain extends cc.Component {
     async update(dt) {
         if (this.timer > this.showDuration) {
             await Alert.show("Score: " + this.score + "\n Do you want to upload score into blockchain?", async f => {
-                let accountAddress = await this.getAcountAddress();
+                const accountAddress = await this.getAcountAddress();
                 try {
-                    let response = await client.api.smartContract.invoke({
+                    const response = await client.api.smartContract.invoke({
                         scriptHash: Globals.contractAddress,
                         operation: "update_score",
                         args: [{ type: "String", value: accountAddress }, { type: 'Integer', value: this.score }],
@@ -97,9 +97,8 @@ export default class GameOnchain extends cc.Component {
                         gasLimit: Globals.gasLimit,
                         payer: accountAddress
                     });
-                    console.log(response);
                     if (response["error"] === 0) {
-                        let txHash = response['result'];
+                        const txHash = response['result'];
                         Alert.show("TxHash:" + txHash, function () {
                             cc.director.loadScene("BitcoinCatcherOnchainMobile");
                         }, function () {

@@ -71,10 +71,10 @@ export default class GameOnchain extends cc.Component {
     async update(dt) {
         if (this.timer > this.showDuration) {
             await Alert.show("Score: " + this.score + "\n Do you want to upload score into blockchain?", async f => {
-                let accountAddress: String = await client.api.asset.getAccount();
+                const accountAddress: String = await client.api.asset.getAccount();
                 let txHash = "";
                 try {
-                    let result = await client.api.smartContract.invoke({
+                    const result = await client.api.smartContract.invoke({
                         scriptHash: Globals.contractAddress,
                         operation: "update_score",
                         args: [{ type: "String", value: accountAddress }, { type: 'Integer', value: this.score }],
@@ -83,7 +83,7 @@ export default class GameOnchain extends cc.Component {
                     });
                     txHash = result['transaction'];
                     Alert.show("TxHash:" + txHash, function () {
-                        cc.sys.openURL("https://explorer.ont.io/transaction/" + result['transaction'] + "/testnet");
+                        cc.sys.openURL("https://explorer.ont.io/transaction/" + txHash + "/testnet");
                         cc.director.loadScene("BitcoinCatcherOnchain");
                     }, function () {
                         cc.director.loadScene("Index");

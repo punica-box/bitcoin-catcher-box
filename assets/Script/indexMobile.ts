@@ -82,8 +82,8 @@ export default class IndexMobile extends cc.Component {
                     break;
                 }
 
-                let score = await this.getScore();
-                let address = await this.getAcountAddress();
+                const score = await this.getScore();
+                const address = await this.getAcountAddress();
                 Alert.show("Address:\n" + address + "\n\nScore: " + score, null, null, false);
                 break;
             default:
@@ -92,7 +92,7 @@ export default class IndexMobile extends cc.Component {
     }
 
     async getAcountAddress() {
-        let response = await client.api.asset.getAccount({
+        const response = await client.api.asset.getAccount({
             dappName: "Bitcoin Catcher",
             dappIcon: ""
         });
@@ -105,9 +105,9 @@ export default class IndexMobile extends cc.Component {
 
 
     async getUserName() {
-        let accountAddress = await this.getAcountAddress();
+        const accountAddress = await this.getAcountAddress();
         try {
-            let response = await client.api.smartContract.invokeRead({
+            const response = await client.api.smartContract.invokeRead({
                 scriptHash: Globals.contractAddress,
                 operation: "get_user_name",
                 args: [{ type: 'String', value: accountAddress }],
@@ -126,8 +126,8 @@ export default class IndexMobile extends cc.Component {
 
     async getScore() {
         try {
-            let accountAddress = await this.getAcountAddress();
-            let response = await client.api.smartContract.invokeRead({
+            const accountAddress = await this.getAcountAddress();
+            const response = await client.api.smartContract.invokeRead({
                 scriptHash: Globals.contractAddress,
                 operation: 'get_score',
                 args: [{ type: 'String', value: accountAddress }],
@@ -151,8 +151,8 @@ export default class IndexMobile extends cc.Component {
 
     async register() {
         try {
-            let accountAddress = await this.getAcountAddress();
-            let response = await client.api.smartContract.invoke({
+            const accountAddress = await this.getAcountAddress();
+            const response = await client.api.smartContract.invoke({
                 scriptHash: Globals.contractAddress,
                 operation: "register",
                 args: [{ type: "String", value: accountAddress }, { type: 'String', value: "NashMiao" }],
@@ -161,7 +161,7 @@ export default class IndexMobile extends cc.Component {
                 payer: accountAddress
             });
             if (response["error"] === 0) {
-                let txHash = response['result'];
+                const txHash = response['result'];
                 Alert.show("TxHash:" + txHash, function () {
                     cc.director.loadScene("BitcoinCatcherOnchainMobile");
                 });
