@@ -21,22 +21,27 @@ export default class index extends cc.Component {
     async onLoad() {
         Alert.show("Do you want to paly this game in blockchain?", async f => {
             this.withBlockchain = true;
-            try {
-                await client.registerClient({});
-                await client.api.provider.getProvider();
-                this.walletExist = true;
-            }
-            catch (e) {        
-                this.walletExist = false;
-                Alert.show("Please install cyano wallet first if you want to play it with blockchain.", function () {
-                    cc.sys.openURL("https://chrome.google.com/webstore/detail/cyano-wallet/dkdedlpgdmmkkfjabffeganieamfklkm?hl=en");
-                }, f => {
-                    this.withBlockchain = false;
-                });
-            }
         }, f => {
             this.withBlockchain = false;
         })
+
+        try {
+            await client.registerClient({});
+            await client.api.provider.getProvider();
+            this.walletExist = true;
+        }
+        catch (e) {
+            this.walletExist = false;
+        }
+
+        if (this.walletExist === false && this.withBlockchain === true) {
+            Alert.show("Please install cyano wallet first if you want to play it with blockchain.", function () {
+                cc.sys.openURL("https://chrome.google.com/webstore/detail/cyano-wallet/dkdedlpgdmmkkfjabffeganieamfklkm?hl=en");
+            }, f => {
+                this.withBlockchain = false;
+            });
+        }
+
         this.playButton.node.on('click', this.startScene, this);
         this.scoreButton.node.on('click', this.startScene, this);
     }
