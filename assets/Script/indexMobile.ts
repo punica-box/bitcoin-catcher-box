@@ -17,23 +17,29 @@ export default class IndexMobile extends cc.Component {
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad() {
-        Alert.show("Do you want to paly this game in blockchain?", async f => {
+    async onLoad() {
+        Alert.show("Do you want to play this game in blockchain?", f => {
             this.withBlockchain = true;
-            try {
-                await client.registerClient();
-                this.walletExist = true;
-            }
-            catch (e) {
-                Alert.show("If you want to play with blockchain, please open it in ONTO.", function () {
-                    cc.sys.openURL("https://onto.app/");
-                }, f => {
-                    this.withBlockchain = false;
-                });
-            }
         }, f => {
             this.withBlockchain = false;
-        })
+        });
+
+        try {
+            await client.registerClient();
+            await client.api.asset.getAccount();
+            this.walletExist = true;
+        } catch (e) {
+            this.walletExist = false;
+        }
+
+        if (this.withBlockchain === true && this.walletExist === false) {
+            Alert.show("If you want to play with blockchain, please open it in ONTO.", function () {
+                cc.sys.openURL("https://onto.app/");
+            },f=>{
+                this.withBlockchain = false;
+            });
+        }
+
         this.playButton.node.on('click', this.startScene, this);
         this.scoreButton.node.on('click', this.startScene, this);
     }
@@ -75,8 +81,18 @@ export default class IndexMobile extends cc.Component {
                 }
                 break;
             case 'scoreButton':
+                if (this.withBlockchain === false) {
+                    await Alert.show("Do you want to use blockchain part?", f => {
+                        this.withBlockchain = true;
+                    }, f => {
+                        this.withBlockchain = false;
+                    });
+                    break;
+                }
+
+
                 if (this.walletExist === false) {
-                    await Alert.show("Please install ONTO first", function () {
+                    await Alert.show("Please install ONTO first if you want to unlock blockchain part.", function () {
                         cc.sys.openURL("https://onto.app/");
                     });
                     break;
