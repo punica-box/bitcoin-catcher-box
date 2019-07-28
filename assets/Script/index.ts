@@ -19,7 +19,7 @@ export default class index extends cc.Component {
     // LIFE-CYCLE CALLBACKS:
 
     async onLoad() {
-        Alert.show("Do you want to paly this game in blockchain?", async f => {
+        Alert.show("Do you want to play this game in blockchain?", async f => {
             this.withBlockchain = true;
         }, f => {
             this.withBlockchain = false;
